@@ -23,4 +23,23 @@ object UsingClasses extends App {
   val castle = new FancyHouse()
   castle.prettyPrint() //pretty print was inherited from house
   castle.addNewPainting("Van gog")
+
+  //creating doesn't need new
+  val valdis = Person("Valdis", 45, 100.1, 90, "brown")
+  println(valdis)
+  println(valdis.getBMI())
+  valdis.hairColor = "black" //possible to mutate vars but not the best practice
+
+  //can compare
+  val uljana = Person("Ulja", 60, 214, 120, "gray")
+  println(uljana)
+  println(valdis == uljana)
+  val kristaps = uljana.copy(hairColor = "blonde") //called shallow copy
+  //references to data outside are copied only at the top level
+  println(kristaps == uljana)
+  val valdisClone = valdis.copy()
+  println(valdisClone == valdis)
+
+
+
 }

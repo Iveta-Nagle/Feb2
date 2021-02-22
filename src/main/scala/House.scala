@@ -17,11 +17,11 @@ class House (houseName: String, var heating: String, var hasGarage: Boolean = fa
     println(s"Has garage: $hasGarage")
   }
   def showSecret(): Unit = println(s"My secret is $mySecret")
-  def getSecret(): String = {
+  def getSecret: String = {
     //he
     mySecret
   }
-  def getMutSecret(): String = mutableSecret
+  def getMutSecret: String = mutableSecret
   def setMutSecret(txt: String): String = {
     mutableSecret = sanitizer(txt)
     "Success"
@@ -33,5 +33,10 @@ class House (houseName: String, var heating: String, var hasGarage: Boolean = fa
   private def sanitizer(txt: String): String = {
     txt.toLowerCase()
   }
+
+  //we can override existing methods that are built in
+  //for example to have print give out my custom print
+
+  override def toString: String = s"Object of class: ${getClass.getName}. Custom toString house name: $houseName"
   println("New object creation is finished")
 }
