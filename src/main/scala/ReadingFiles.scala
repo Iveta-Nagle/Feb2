@@ -42,7 +42,7 @@ object ReadingFiles extends App {
 
   //Printwriter
   val relative_save_path = "/Users/ivetanagle/IdeaProjects/Feb2/src/resources/two_roads_cleaned.txt"
-  import java.io._
+  import java.io.{PrintWriter, File}
   val pw = new PrintWriter(new File(relative_save_path))
   pw.write(and_text)
   pw.close //when writing it is especially important to close as early as possible
