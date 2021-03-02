@@ -1,3 +1,5 @@
+import AnalyzePoetry.lines
+
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
@@ -80,5 +82,34 @@ object AnalyzePoetry extends App {
     //so we split each line  on whitespace of any type
     value.foreach(title => title.split("\\s+").foreach(println))
   }
+
+  def removeEmptyLines(lines: Array[String]): Array[String] = {
+    lines.filter(_.length > 1) // for single comparison check
+    // lines.filter(line => line.length > 1 ) // for more complicated checks
+  }
+
+  println("*"*40)
+
+
+  val needle = "Amy Lowell"
+
+  def findNeedle(lines: Array[String], needle: String): Int = {
+    var lineNumber = -1 // our line indexes starts with 0
+    for ((line, index) <- lines.zipWithIndex) {
+      if (lineNumber == - 1 && line.toLowerCase.contains(needle.toLowerCase))
+        lineNumber = index
+    }
+    lineNumber
+  }
+
+  val startLine = findNeedle(lines, needle)
+  val endLine = findNeedle(lines, "bibliography")
+  println(s"We will start at line: $startLine and end at $endLine")
+
+  val noEmptyLines = removeEmptyLines(lines.slice(164,334))
+  noEmptyLines.foreach(println)
+  val noSubTitles = noEmptyLines.filter(line => !line.trim.startsWith("_"))
+  println("*"*40)
+  noSubTitles.foreach(println)
 
 }
