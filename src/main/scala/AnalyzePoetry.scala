@@ -17,14 +17,9 @@ object AnalyzePoetry extends App {
 
   println(s"Will open file from $real_path")
 
-  def getLinesFromFile(srcPath: String): Array[String] = {
-    val bufferedSource = Source.fromFile(srcPath)
-    val lines = bufferedSource.getLines.toArray
-    bufferedSource.close
-    lines
-  }
 
-  val lines = getLinesFromFile(real_path)
+
+  val lines = Utilities.getLinesFromFile(real_path)
   println(s"We have ${lines.size} lines in our $real_path")
 
   //remember about 0 base indexing - so have to go minus 1
@@ -94,17 +89,10 @@ object AnalyzePoetry extends App {
 
   val needle = "Amy Lowell"
 
-  def findNeedle(lines: Array[String], needle: String): Int = {
-    var lineNumber = -1 // our line indexes starts with 0
-    for ((line, index) <- lines.zipWithIndex) {
-      if (lineNumber == - 1 && line.toLowerCase.contains(needle.toLowerCase))
-        lineNumber = index
-    }
-    lineNumber
-  }
 
-  val startLine = findNeedle(lines, needle)
-  val endLine = findNeedle(lines, "bibliography")
+
+  val startLine = Utilities.findNeedle(lines, needle)
+  val endLine = Utilities.findNeedle(lines, "bibliography")
   println(s"We will start at line: $startLine and end at $endLine")
 
   val noEmptyLines = removeEmptyLines(lines.slice(164,334))
@@ -188,4 +176,34 @@ object AnalyzePoetry extends App {
     phone
   })
   phones.foreach(println)
+
+  //finding line number and the actual line which interest us
+
+  val frostLines = lines.zipWithIndex.filter(pair => pair._1.matches(".*FROST.*"))
+  frostLines.foreach(println)
+  // could have chained the following after matches but for clarity storing the intermediate results
+  val cleanFrost = frostLines.map(pair => (pair._1.trim, pair._2 +1))
+  cleanFrost.foreach(println)
+
+  //this only picks up emails in form of email00@domain.tld
+  val simpleEmailRegEx = """.*\b(\w+@\w+.\w+).*""" //for matching it does not need the regex type just a string
+
+
+  val emailLines = lines.filter(line => line.matches(simpleEmailRegEx))
+  emailLines.foreach(println)
+
+  val emailPattern = """\w+@\w+.\w+""".r //you'd use a more complex pattern for more complex emails
+
+  //so we can go through lines one by one her we know line 3(index 2) has the 3 emails
+  val emailMatches = emailPattern.findAllMatchIn(emailLines(2)).toArray //without toArray we get Iterator(lazy on demand)
+  emailMatches.foreach(println)
+  //how to get out all emails
+  println("**** All emails **** ")
+  //simplest would be to sticky all the filters lines back before getting the emails out
+
+  val allEmails = emailPattern.findAllIn(emailLines.mkString("\n")).toArray
+  allEmails.foreach(println)
+
+  //we can use saveLines  utility method/function from our sibling Object in the same project
+  Utilities.saveLines(allEmails, "/Users/ivetanagle/IdeaProjects/Feb2/src/resources/e_mails.txt")
 }
